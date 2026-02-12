@@ -1,0 +1,64 @@
+html,
+body {
+  overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+::selection {
+  background: rgba(200, 169, 126, 0.3);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #111;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2e2e2e;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(200, 169, 126, 0.5);
+}
+
+/* Mouse scroll indicator */
+.mouse-scroll {
+  width: 26px;
+  height: 42px;
+  border: 2px solid rgba(200, 169, 126, 0.5);
+  border-radius: 13px;
+  position: relative;
+}
+
+.mouse-scroll::before {
+  content: "";
+  width: 4px;
+  height: 8px;
+  background: #c8a97e;
+  border-radius: 2px;
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: scrollWheel 2s ease-in-out infinite;
+}
+
+@keyframes scrollWheel {
+  0% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(16px);
+  }
+}
