@@ -16,7 +16,6 @@ const experiences = [
     title: "Full Stack Developer",
     company: "RUNA",
     companyUrl: "https://app.runahr.com/",
-    badge: "Part Time",
     description:
       "Building RUNA's payroll website, contributing to both frontend and backend development for scalable and reliable solutions at American-based company.",
     tags: ["React.js", "Next.js", "TypeScript", "Full Stack", "Payroll", "gRPC"],
@@ -193,18 +192,6 @@ export default function Experience() {
                               <Typography variant="body2" color="text.secondary">
                                 {exp.company}
                               </Typography>
-                            )}
-                            {exp.badge && (
-                              <Chip
-                                label={exp.badge}
-                                size="small"
-                                sx={{
-                                  height: 22,
-                                  fontSize: "0.7rem",
-                                  bgcolor: "rgba(200,169,126,0.1)",
-                                  color: "primary.main",
-                                }}
-                              />
                             )}
                           </Stack>
                         </Box>

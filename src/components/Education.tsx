@@ -46,7 +46,7 @@ const educations = [
 
 export default function Education() {
   return (
-    <Box component="section" id="education" sx={{ py: { xs: 10, md: 14 } }}>
+    <Box component="section" id="education" sx={{ py: { xs: 10, md: 14 }, bgcolor: "#111" }}>
       <Container maxWidth="lg">
         <AnimatedSection>
           <Box textAlign="center" mb={8}>

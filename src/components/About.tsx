@@ -14,16 +14,18 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import EmailIcon from "@mui/icons-material/Email";
 import WorkIcon from "@mui/icons-material/Work";
 import TranslateIcon from "@mui/icons-material/Translate";
+import { useCopyEmail } from "@/hooks/useCopyEmail";
+import { EMAIL } from "@/lib/constants";
 
 const details = [
   { icon: <LocationOnIcon />, label: "Location", value: "Yerevan, Armenia" },
   {
     icon: <EmailIcon />,
     label: "Email",
-    value: "avetisyanani6@gmail.com",
-    href: "mailto:avetisyanani6@gmail.com",
+    value: EMAIL,
+    href: `mailto:${EMAIL}`,
   },
-  { icon: <WorkIcon />, label: "Current Role", value: "Full Stack Developer\n@ RUNA" },
+  { icon: <WorkIcon />, label: "Current Role", value: "Full Stack Developer\nat RUNA" },
   { icon: <TranslateIcon />, label: "Languages", value: "Armenian, English, Russian, Spanish" },
 ];
 
@@ -39,6 +41,8 @@ const personalSkills = [
 ];
 
 export default function About() {
+  const copyEmail = useCopyEmail();
+
   return (
     <Box component="section" id="about" sx={{ py: { xs: 10, md: 14 }, bgcolor: "#111" }}>
       <Container maxWidth="lg">
@@ -112,59 +116,66 @@ export default function About() {
           <Grid item xs={12} lg={6}>
             <AnimatedSection direction="right">
               <Stack spacing={3}>
-                <Grid container spacing={2}>
-                  {details.map((detail) => (
-                    <Grid item xs={12} sm={6} key={detail.label}>
-                      <Card>
-                        <CardContent sx={{ p: 2.5, "&:last-child": { pb: 2.5 } }}>
-                          <Stack direction="row" spacing={1.5} alignItems="flex-start">
-                            <Box
-                              sx={{
-                                width: 40,
-                                height: 40,
-                                borderRadius: 2,
-                                bgcolor: "rgba(200,169,126,0.1)",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                color: "primary.main",
-                                flexShrink: 0,
-                              }}
-                            >
-                              {detail.icon}
-                            </Box>
-                            <Box>
-                              <Typography variant="caption" color="text.secondary" textTransform="uppercase" letterSpacing={1}>
-                                {detail.label}
-                              </Typography>
-                              {detail.href ? (
-                                <Typography
-                                  component="a"
-                                  href={detail.href}
-                                  variant="body2"
-                                  sx={{
-                                    display: "block",
-                                    color: "white",
-                                    textDecoration: "none",
-                                    mt: 0.3,
-                                    "&:hover": { color: "primary.main" },
-                                    transition: "color 0.3s",
-                                  }}
-                                >
-                                  {detail.value}
+                <Box>
+                  <Grid container spacing={2}>
+                    {details.map((detail) => (
+                      <Grid item xs={12} sm={6} key={detail.label}>
+                        <Card>
+                          <CardContent sx={{ p: 2.5, "&:last-child": { pb: 2.5 } }}>
+                            <Stack direction="row" spacing={1.5} alignItems="flex-start">
+                              <Box
+                                sx={{
+                                  width: 40,
+                                  height: 40,
+                                  borderRadius: 2,
+                                  bgcolor: "rgba(200,169,126,0.1)",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  color: "primary.main",
+                                  flexShrink: 0,
+                                }}
+                              >
+                                {detail.icon}
+                              </Box>
+                              <Box>
+                                <Typography variant="caption" color="text.secondary" textTransform="uppercase" letterSpacing={1}>
+                                  {detail.label}
                                 </Typography>
-                              ) : (
-                                <Typography variant="body2" color="white" sx={{ mt: 0.3, whiteSpace: "pre-line" }}>
-                                  {detail.value}
-                                </Typography>
-                              )}
-                            </Box>
-                          </Stack>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  ))}
-                </Grid>
+                                {detail.href ? (
+                                  <Typography
+                                    component="a"
+                                    href={detail.href}
+                                    onClick={(event) => {
+                                      event.preventDefault();
+                                      copyEmail();
+                                    }}
+                                    title="Click to copy"
+                                    variant="body2"
+                                    sx={{
+                                      display: "block",
+                                      color: "white",
+                                      textDecoration: "none",
+                                      mt: 0.3,
+                                      "&:hover": { color: "primary.main" },
+                                      transition: "color 0.3s",
+                                    }}
+                                  >
+                                    {detail.value}
+                                  </Typography>
+                                ) : (
+                                  <Typography variant="body2" color="white" sx={{ mt: 0.3, whiteSpace: "pre-line" }}>
+                                    {detail.value}
+                                  </Typography>
+                                )}
+                              </Box>
+                            </Stack>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Box>
 
                 <Card>
                   <CardContent sx={{ p: 3 }}>

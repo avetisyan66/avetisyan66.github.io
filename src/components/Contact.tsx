@@ -13,27 +13,30 @@ import EmailIcon from "@mui/icons-material/Email";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { useCopyEmail } from "@/hooks/useCopyEmail";
+import { EMAIL, GITHUB_URL, LINKEDIN_URL } from "@/lib/constants";
 
 const contactCards = [
   {
     icon: <EmailIcon fontSize="large" />,
     title: "Email",
-    value: "avetisyanani6@gmail.com",
-    href: "mailto:avetisyanani6@gmail.com",
+    value: EMAIL,
+    href: `mailto:${EMAIL}`,
     external: false,
+    copyEmail: true,
   },
   {
     icon: <GitHubIcon fontSize="large" />,
     title: "GitHub",
     value: "github.com/avetisyan66",
-    href: "https://github.com/avetisyan66",
+    href: GITHUB_URL,
     external: true,
   },
   {
     icon: <LinkedInIcon fontSize="large" />,
     title: "LinkedIn",
     value: "linkedin.com/in/avetisyan66",
-    href: "https://linkedin.com/in/avetisyan66",
+    href: LINKEDIN_URL,
     external: true,
   },
   {
@@ -46,8 +49,10 @@ const contactCards = [
 ];
 
 export default function Contact() {
+  const copyEmail = useCopyEmail();
+
   return (
-    <Box component="section" id="contact" sx={{ py: { xs: 10, md: 14 }, bgcolor: "#111" }}>
+    <Box component="section" id="contact" sx={{ py: { xs: 10, md: 14 } }}>
       <Container maxWidth="lg">
         <AnimatedSection>
           <Box textAlign="center" mb={8}>
@@ -79,7 +84,7 @@ export default function Contact() {
           </Typography>
         </AnimatedSection>
 
-        <Grid container spacing={3} justifyContent="center" maxWidth={900} mx="auto">
+        <Grid container spacing={3} justifyContent="center">
           {contactCards.map((card, index) => (
             <Grid item xs={12} sm={6} lg={3} key={card.title}>
               <AnimatedSection delay={index * 0.1}>
@@ -100,6 +105,14 @@ export default function Contact() {
                     href={card.href}
                     target={card.external ? "_blank" : undefined}
                     rel={card.external ? "noopener noreferrer" : undefined}
+                    onClick={
+                      card.copyEmail
+                        ? (event) => {
+                            event.preventDefault();
+                            copyEmail();
+                          }
+                        : undefined
+                    }
                   >
                     <CardContent sx={{ p: 3 }}>
                       <Box
@@ -122,7 +135,7 @@ export default function Contact() {
                       <Typography variant="subtitle1" color="white" fontWeight={600}>
                         {card.title}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary" mt={0.5}>
+                      <Typography variant="body2" color="text.secondary" mt={0.5} sx={{ overflowWrap: "anywhere" }}>
                         {card.value}
                       </Typography>
                     </CardContent>

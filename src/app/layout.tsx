@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import ThemeRegistry from "@/theme/ThemeRegistry";
+import { ToastProvider } from "@/components/providers/ToastProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -47,7 +48,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body className={inter.className}>
-        <ThemeRegistry>{children}</ThemeRegistry>
+        <ThemeRegistry>
+          <ToastProvider>{children}</ToastProvider>
+        </ThemeRegistry>
       </body>
     </html>
   );

@@ -12,28 +12,36 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import Collapse from "@mui/material/Collapse";
+import Stack from "@mui/material/Stack";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import SearchIcon from "@mui/icons-material/Search";
+import ButtonBase from "@mui/material/ButtonBase";
 import Image from "next/image";
-
-const navLinks = [
-  { href: "#about", label: "About" },
-  { href: "#experience", label: "Experience" },
-  { href: "#skills", label: "Skills" },
-  { href: "#education", label: "Education" },
-  { href: "#contact", label: "Contact" },
-];
+import Kbd from "./Kbd";
+import { OPEN_COMMAND_PALETTE_EVENT } from "./CommandPalette";
+import { NAV_LINKS } from "@/lib/constants";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
+  const [modifierKey, setModifierKey] = useState("Ctrl");
+
+  useEffect(() => {
+    if (/Mac|iPhone|iPad/.test(navigator.userAgent)) setModifierKey("⌘");
+  }, []);
+
+  const openCommandPalette = () => {
+    setMobileOpen(false);
+    window.dispatchEvent(new Event(OPEN_COMMAND_PALETTE_EVENT));
+  };
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
 
-      const sections = navLinks.map((link) =>
+      const sections = NAV_LINKS.map((link) =>
         document.querySelector(link.href)
       );
       const scrollPos = window.scrollY + 100;
@@ -45,7 +53,7 @@ export default function Navbar() {
             scrollPos >= el.offsetTop &&
             scrollPos < el.offsetTop + el.offsetHeight
           ) {
-            setActiveSection(navLinks[index].href);
+            setActiveSection(NAV_LINKS[index].href);
           }
         }
       });
@@ -64,9 +72,11 @@ export default function Navbar() {
       position="fixed"
       elevation={0}
       sx={{
-        bgcolor: scrolled ? "rgba(10,10,10,0.9)" : "transparent",
+        bgcolor: scrolled ? "rgba(10,10,10,0.98)" : "rgba(10,10,10,0)",
         backdropFilter: scrolled ? "blur(12px)" : "none",
-        borderBottom: scrolled ? "1px solid rgba(255,255,255,0.05)" : "none",
+        // Keep the border always present and only fade its color, so it never animates from the white text color
+        borderBottom: "1px solid",
+        borderColor: scrolled ? "rgba(200,169,126,0.15)" : "rgba(200,169,126,0)",
         transition: "all 0.3s ease",
       }}
     >
@@ -104,65 +114,91 @@ export default function Navbar() {
             </Typography>
           </Box>
 
-          {/* Desktop Nav */}
-          <Box
-            component="ul"
-            sx={{
-              display: { xs: "none", md: "flex" },
-              gap: 4,
-              listStyle: "none",
-              m: 0,
-              p: 0,
-              alignItems: "center",
-            }}
-          >
-            {navLinks.map((link) => (
-              <Box component="li" key={link.href}>
-                <Typography
-                  component="a"
-                  href={link.href}
-                  sx={{
-                    fontSize: "0.8rem",
-                    fontWeight: 500,
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                    textDecoration: "none",
-                    color: activeSection === link.href ? "primary.main" : "grey.400",
-                    position: "relative",
-                    transition: "color 0.3s",
-                    "&:hover": { color: "primary.main" },
-                    "&::after": {
-                      content: '""',
-                      position: "absolute",
-                      bottom: -4,
-                      left: 0,
-                      width: "100%",
-                      height: 2,
-                      bgcolor: "primary.main",
-                      transform: activeSection === link.href ? "scaleX(1)" : "scaleX(0)",
-                      transformOrigin: "right",
-                      transition: "transform 0.3s ease",
-                    },
-                    "&:hover::after": {
-                      transform: "scaleX(1)",
-                      transformOrigin: "left",
-                    },
-                  }}
-                >
-                  {link.label}
-                </Typography>
-              </Box>
-            ))}
-          </Box>
+          <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, md: 3 }}>
+            {/* Desktop Nav */}
+            <Box
+              component="ul"
+              sx={{
+                display: { xs: "none", md: "flex" },
+                gap: 4,
+                listStyle: "none",
+                m: 0,
+                p: 0,
+                alignItems: "center",
+              }}
+            >
+              {NAV_LINKS.map((link) => (
+                <Box component="li" key={link.href}>
+                  <Typography
+                    component="a"
+                    href={link.href}
+                    sx={{
+                      fontSize: "0.8rem",
+                      fontWeight: 500,
+                      letterSpacing: "0.1em",
+                      textTransform: "uppercase",
+                      textDecoration: "none",
+                      color: activeSection === link.href ? "primary.main" : "grey.400",
+                      position: "relative",
+                      transition: "color 0.3s",
+                      "&:hover": { color: "primary.main" },
+                      "&::after": {
+                        content: '""',
+                        position: "absolute",
+                        bottom: -4,
+                        left: 0,
+                        width: "100%",
+                        height: 2,
+                        bgcolor: "primary.main",
+                        transform: activeSection === link.href ? "scaleX(1)" : "scaleX(0)",
+                        transformOrigin: "right",
+                        transition: "transform 0.3s ease",
+                      },
+                      "&:hover::after": {
+                        transform: "scaleX(1)",
+                        transformOrigin: "left",
+                      },
+                    }}
+                  >
+                    {link.label}
+                  </Typography>
+                </Box>
+              ))}
+            </Box>
 
-          {/* Mobile Toggle */}
-          <IconButton
-            onClick={() => setMobileOpen(!mobileOpen)}
-            sx={{ display: { md: "none" }, color: "white" }}
-            aria-label="Toggle menu"
-          >
-            {mobileOpen ? <CloseIcon /> : <MenuIcon />}
-          </IconButton>
+            {/* Command Palette */}
+            <ButtonBase
+              onClick={openCommandPalette}
+              aria-label="Open command palette"
+              sx={{
+                gap: 1,
+                height: 40,
+                minWidth: 40,
+                px: { xs: 1, md: 1.25 },
+                borderRadius: 50,
+                color: "grey.400",
+                border: { md: "1px solid rgba(255,255,255,0.1)" },
+                bgcolor: { md: "rgba(255,255,255,0.03)" },
+                transition: "all 0.3s",
+                "&:hover": { color: "primary.main", borderColor: "rgba(200,169,126,0.4)" },
+              }}
+            >
+              <SearchIcon fontSize="small" />
+              <Stack direction="row" spacing={0.5} sx={{ display: { xs: "none", md: "flex" } }}>
+                <Kbd>{modifierKey}</Kbd>
+                <Kbd>K</Kbd>
+              </Stack>
+            </ButtonBase>
+
+            {/* Mobile Toggle */}
+            <IconButton
+              onClick={() => setMobileOpen(!mobileOpen)}
+              sx={{ display: { md: "none" }, color: "white" }}
+              aria-label="Toggle menu"
+            >
+              {mobileOpen ? <CloseIcon /> : <MenuIcon />}
+            </IconButton>
+          </Stack>
         </Toolbar>
       </Container>
 
@@ -178,7 +214,7 @@ export default function Navbar() {
         >
           <Container maxWidth="lg">
             <List sx={{ py: 2 }}>
-              {navLinks.map((link) => (
+              {NAV_LINKS.map((link) => (
                 <ListItemButton
                   key={link.href}
                   component="a"

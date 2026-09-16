@@ -47,13 +47,35 @@ const theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
+          position: "relative",
           background: "rgba(26, 26, 26, 0.6)",
           backdropFilter: "blur(12px)",
           border: "1px solid rgba(255,255,255,0.05)",
-          transition: "all 0.3s ease",
+          transition: "transform 0.2s ease-out, box-shadow 0.3s ease, border-color 0.3s ease",
           "&:hover": {
-            transform: "translateY(-4px)",
+            // --tilt-* and --mouse-* are set by CardEffects on precise-pointer devices
+            transform:
+              "perspective(1000px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translateY(-4px)",
             boxShadow: "0 8px 30px rgba(200, 169, 126, 0.08)",
+          },
+          "@media (hover: hover) and (pointer: fine)": {
+            "&::before": {
+              content: '""',
+              position: "absolute",
+              inset: 0,
+              borderRadius: "inherit",
+              background:
+                "radial-gradient(420px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(200, 169, 126, 0.1), transparent 45%)",
+              opacity: 0,
+              transition: "opacity 0.3s ease",
+              pointerEvents: "none",
+            },
+            "&:hover": {
+              borderColor: "rgba(200, 169, 126, 0.2)",
+            },
+            "&:hover::before": {
+              opacity: 1,
+            },
           },
         },
       },
