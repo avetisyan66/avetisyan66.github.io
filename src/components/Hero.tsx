@@ -9,6 +9,8 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Chip from "@mui/material/Chip";
 import Image from "next/image";
+import TypingRoles from "./TypingRoles";
+import heroBackground from "../../public/images/bg.PNG";
 
 export default function Hero() {
   const [counters, setCounters] = useState({ years: 0, companies: 0, languages: 0 });
@@ -18,7 +20,7 @@ export default function Hero() {
   }, []);
 
   useEffect(() => {
-    const targets = { years: 9, companies: 6, languages: 3 };
+    const targets = { years: 9, companies: 6, languages: 4 };
     const duration = 2000;
     const steps = 60;
     const interval = duration / steps;
@@ -71,32 +73,77 @@ export default function Hero() {
       id="hero"
       sx={{
         position: "relative",
-        minHeight: "100vh",
+        // On desktop the hero hugs its content so the next section peeks in right away
+        minHeight: { xs: "100vh", lg: "auto" },
         display: "flex",
         alignItems: "center",
         overflow: "hidden",
       }}
     >
       {/* Background Image */}
-      <Box sx={{ position: "absolute", inset: 0, zIndex: 0 }}>
-        <Image
-          src="/images/bg.PNG"
-          alt="Background"
-          fill
-          style={{ objectFit: "cover", objectPosition: "center" }}
-          priority
-        />
+      <Box sx={{ position: "absolute", inset: 0, zIndex: 0, bgcolor: "#0a0a0a" }}>
+        {/* The banner is shown at full width with its real aspect ratio, so the whole photo and signature stay visible */}
+        <Box
+          sx={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: { xs: 64, lg: 0 },
+            aspectRatio: { xs: `${heroBackground.width} / ${heroBackground.height}`, lg: "auto" },
+            // On desktop the photo runs almost the full hero height; extra width is trimmed from the laptop side
+            height: { lg: "100%" },
+            maskImage: {
+              xs: "linear-gradient(to bottom, transparent, black 12%, black 80%, transparent)",
+              lg: "linear-gradient(to bottom, black 55%, transparent)",
+            },
+            WebkitMaskImage: {
+              xs: "linear-gradient(to bottom, transparent, black 12%, black 80%, transparent)",
+              lg: "linear-gradient(to bottom, black 55%, transparent)",
+            },
+          }}
+        >
+          <Image src={heroBackground} alt="Background" fill sizes="100vw" style={{ objectFit: "cover", objectPosition: "right center" }} priority />
+        </Box>
+
         <Box
           sx={{
             position: "absolute",
             inset: 0,
-            background: "linear-gradient(to bottom, rgba(10,10,10,0.6), rgba(10,10,10,0.4), rgba(10,10,10,1))",
+            background: {
+              xs: "rgba(10,10,10,0.3)",
+              // Top shade keeps the transparent navbar readable over the light part of the photo,
+              // the left-side shade keeps the intro text readable over the laptop part
+              // and the bottom fades into the About section's background so there's no seam
+              lg: "linear-gradient(to bottom, rgba(10,10,10,0.85), rgba(10,10,10,0.55) 70px, rgba(10,10,10,0) 200px), linear-gradient(to bottom, rgba(17,17,17,0) 65%, #111), linear-gradient(to right, rgba(10,10,10,0.85), rgba(10,10,10,0.65) 40%, rgba(10,10,10,0.15) 70%, rgba(10,10,10,0))",
+            },
+          }}
+        />
+
+        {/* Soft blur band behind the navbar that fades out downwards */}
+        <Box
+          sx={{
+            display: { xs: "none", lg: "block" },
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 160,
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+            maskImage: "linear-gradient(to bottom, black 40%, transparent)",
+            WebkitMaskImage: "linear-gradient(to bottom, black 40%, transparent)",
           }}
         />
       </Box>
 
       {/* Content */}
-      <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1, pt: 16, pb: 10 }}>
+      <Container maxWidth="lg" sx={{
+          position: "relative",
+          zIndex: 1,
+          // Below 1200px the content starts under the full-width banner (64px navbar + banner height)
+          pt: { xs: `calc(64px + ${(heroBackground.height / heroBackground.width) * 100}vw + 24px)`, lg: 16 },
+          pb: { xs: 10, lg: 8 },
+        }}>
         <Box maxWidth={700}>
           <Box
             component={motion.div}
@@ -132,7 +179,7 @@ export default function Hero() {
               sx={{
                 fontSize: { xs: "3rem", md: "4.5rem" },
                 color: "white",
-                mb: 3,
+                mb: 2,
               }}
             >
               Ani{" "}
@@ -147,6 +194,7 @@ export default function Hero() {
                 Avetisyan
               </Box>
             </Typography>
+            <TypingRoles />
           </Box>
 
           <Box
@@ -224,35 +272,6 @@ export default function Hero() {
           </Stack>
         </Box>
       </Container>
-
-      {/* Scroll Indicator */}
-      <Box
-        component={motion.a}
-        href="#about"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        sx={{
-          position: "absolute",
-          bottom: 32,
-          left: "50%",
-          transform: "translateX(-50%)",
-          zIndex: 1,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 1.5,
-          color: "grey.500",
-          textDecoration: "none",
-          "&:hover": { color: "primary.main" },
-          transition: "color 0.3s",
-        }}
-      >
-        <Box className="mouse-scroll" />
-        <Typography variant="caption" sx={{ letterSpacing: "0.2em", textTransform: "uppercase" }}>
-          Scroll
-        </Typography>
-      </Box>
     </Box>
   );
 }

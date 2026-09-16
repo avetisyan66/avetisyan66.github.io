@@ -10,11 +10,12 @@ import EmailIcon from "@mui/icons-material/Email";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import Image from "next/image";
+import { EMAIL, GITHUB_URL, LINKEDIN_URL } from "@/lib/constants";
 
 const socials = [
-  { icon: <EmailIcon />, href: "mailto:avetisyanani6@gmail.com", label: "Email" },
-  { icon: <GitHubIcon />, href: "https://github.com/avetisyan66", label: "GitHub" },
-  { icon: <LinkedInIcon />, href: "https://linkedin.com/in/avetisyan66", label: "LinkedIn" },
+  { icon: <EmailIcon />, href: `mailto:${EMAIL}`, label: "Email" },
+  { icon: <GitHubIcon />, href: GITHUB_URL, label: "GitHub" },
+  { icon: <LinkedInIcon />, href: LINKEDIN_URL, label: "LinkedIn" },
 ];
 
 export default function Footer() {
