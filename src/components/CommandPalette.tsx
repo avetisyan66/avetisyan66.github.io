@@ -38,7 +38,6 @@ const NAV_ICONS: Record<string, ReactNode> = {
   "#about": <PersonIcon fontSize="small" />,
   "#experience": <WorkIcon fontSize="small" />,
   "#skills": <CodeIcon fontSize="small" />,
-  "#github": <GitHubIcon fontSize="small" />,
   "#education": <SchoolIcon fontSize="small" />,
   "#contact": <ForumIcon fontSize="small" />,
 };
